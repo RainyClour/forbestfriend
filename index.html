@@ -1,236 +1,815 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Gift For Bestie 🍀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Hành Trình Xanh - Bảo Vệ Trái Đất</title>
+
+    <!-- Thư viện hỗ trợ giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-        :root {
-            --primary-green: #4CAF50;
-            --note-yellow: #fff2b2;
-            --bg-color: #f1f8e9;
+        /* Thiết lập Font chữ */
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        h1, h2, h3, .font-outfit { font-family: 'Outfit', sans-serif; }
+
+        html { scroll-padding-top: 5rem; }
+
+        /* Hiệu ứng chớp mắt cho chú gấu */
+        @keyframes blink {
+            0%, 94%, 98%, 100% { transform: scaleY(1); }
+            96% { transform: scaleY(0.1); }
+        }
+        .bear-eye {
+            transform-origin: center;
+            animation: blink 4s infinite;
         }
 
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle, #ffffff 0%, #e8f5e9 100%);
+        /* Hiệu ứng thở (nhấp nhô nhẹ) */
+        @keyframes breathe {
+            0%, 100% { transform: translateY(0.5rem); }
+            50% { transform: translateY(0rem); }
+        }
+        .bear-svg-container {
+            animation: breathe 3s ease-in-out infinite;
         }
 
-        /* Hiệu ứng cỏ rơi */
-        .clover-rain { position: fixed; top: -50px; font-size: 24px; z-index: 1; pointer-events: none; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
-
-        /* Màn hình khóa */
-        #lock-screen { z-index: 100; text-align: center; background: white; padding: 2.5rem; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        h1 { font-family: 'Dancing Script', cursive; color: var(--primary-green); margin-bottom: 20px; }
-        input { padding: 12px; border: 2px solid #ddd; border-radius: 10px; width: 220px; margin-bottom: 15px; outline: none; text-align: center; font-size: 1rem; }
-        button { background: var(--primary-green); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-
-        /* Hộp quà */
-        #gift-area { display: none; text-align: center; z-index: 50; }
-        #gift-container { position: relative; width: 200px; height: 200px; cursor: pointer; margin: 0 auto; }
-        .box-body { width: 150px; height: 110px; background: #4a6741; border-radius: 10px; position: absolute; bottom: 0; left: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .box-lid { width: 170px; height: 40px; background: #5d8252; position: absolute; top: 50px; left: 15px; border-radius: 8px; z-index: 2; transition: 0.5s; transform-origin: left bottom; }
-        .open .box-lid { transform: rotate(-110deg) translateY(-20px); }
-
-        @keyframes box-shake {
-            0%, 100% { transform: rotate(0); }
-            25% { transform: rotate(3deg); }
-            50% { transform: rotate(-3deg); }
-            75% { transform: rotate(3deg); }
+        /* Loading Bar Glitch/Lag */
+        .glitch-bar {
+            transition: width 0.1s cubic-bezier(0.4, 0, 1, 1);
         }
 
-        /* Dashboard */
-        #dashboard { display: none; width: 95%; max-width: 600px; z-index: 10; padding: 20px 0; }
-        .card { background: white; padding: 30px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; border: 5px solid var(--primary-green); }
-
-        /* Giấy Note */
-        .special-note {
-            background: var(--note-yellow);
-            padding: 25px;
-            border-radius: 20px 20px 20px 5px;
-            margin: 25px 0;
-            text-align: left;
+        /* Video YouTube responsive */
+        .video-container {
             position: relative;
-            box-shadow: 8px 8px 20px rgba(0,0,0,0.1);
-            display: none;
-        }
-        .special-note::after {
-            content: ""; position: absolute; bottom: 0; right: 0;
-            border-width: 0 0 35px 35px; border-style: solid;
-            border-color: transparent transparent #fff #f1f8e9;
-            background: #ffd54f; border-bottom-right-radius: 20px;
-        }
-
-        /* Spotify Section */
-        #spotify-player {
-            margin: 50px 0;
-            border-radius: 36px;
+            padding-bottom: 56.25%; /* Tỉ lệ 16:9 */
+            height: 0;
             overflow: hidden;
+            border-radius: 1rem;
+            background-color: #1e293b; /* Màu nền chờ khi chưa có video */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .no-scroll { overflow: hidden; }
+
+        /* Hiệu ứng Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Blur background cho header */
+        .header-scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        /* Hamburger Icon Animation */
+        .hamburger-line {
+            transition: all 0.3s ease-in-out;
+        }
+        .menu-open .line-1 { transform: translateY(8px) rotate(45deg); }
+        .menu-open .line-2 { opacity: 0; }
+        .menu-open .line-3 { transform: translateY(-8px) rotate(-45deg); }
+
+        /* --- CSS CHO CẤU TRÚC ĐA TRANG (SPA) --- */
+        .page-section {
             display: none;
-            animation: fadeIn 1s;
+            animation: fadeInPage 0.5s ease-in-out forwards;
         }
-
-        /* Hiệu ứng nổ */
-        .clover-pop {
-            position: fixed; pointer-events: none; z-index: 60; font-size: 30px;
-            animation: popOut 1s forwards ease-out;
+        .page-section.active {
+            display: block;
         }
-        @keyframes popOut {
-            from { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            to { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--tr)); opacity: 0; }
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        #reply-form { display: none; margin-top: 20px; }
-        textarea { width: 100%; height: 70px; border-radius: 10px; border: 2px solid #eee; padding: 10px; resize: none; font-family: inherit; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body>
+<body class="text-slate-800 antialiased no-scroll overflow-x-hidden" id="body-tag">
 
-    <div id="lock-screen">
-        <h1>Mật mã tình bạn 🍀</h1>
-        <input type="password" id="passInput" placeholder="Mật khẩu là gì nè?">
-        <br>
-        <button onclick="unlock()">Xác nhận ✨</button>
-        <p id="error-msg" style="color: red; font-size: 0.8rem; margin-top: 10px; display: none;">Sai pass rồi bà ơi! 🤫</p>
-    </div>
-
-    <div id="gift-area">
-        <div id="gift-container" onclick="handleBoxClick()">
-            <div class="box-lid"></div>
-            <div class="box-body"></div>
+    <!-- PHẦN 1: MÀN HÌNH LOADING CHÚ GẤU THIÊN NHIÊN (CÓ HIỆU ỨNG GIẬT LAG) -->
+    <div id="loading-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#8B9A84] transition-all duration-700 ease-in-out">
+        <div class="relative flex flex-col items-center w-72">
+            <div class="bear-svg-container relative z-10 w-28 h-24 mb-6">
+                <svg viewBox="0 0 100 80" class="w-full h-full">
+                    <circle cx="20" cy="30" r="14" fill="#5c4033" /> 
+                    <circle cx="80" cy="30" r="14" fill="#5c4033" /> 
+                    <ellipse cx="50" cy="55" rx="45" ry="35" fill="#5c4033" /> 
+                    <circle cx="32" cy="50" r="3.5" fill="#1a1a1a" class="bear-eye" /> 
+                    <circle cx="68" cy="50" r="3.5" fill="#1a1a1a" class="bear-eye" /> 
+                    <ellipse cx="18" cy="58" rx="6" ry="3.5" fill="#ffb6c1" opacity="0.6" /> 
+                    <ellipse cx="82" cy="58" rx="6" ry="3.5" fill="#ffb6c1" opacity="0.6" />
+                    <ellipse cx="50" cy="54" rx="4" ry="2.5" fill="#1a1a1a" /> 
+                    <path d="M 46 60 Q 48 64 50 60 Q 52 64 54 60" stroke="#1a1a1a" stroke-width="2" fill="transparent" stroke-linecap="round" /> 
+                </svg>
+            </div>
+            <div class="relative w-full h-2 rounded-full bg-black/20 overflow-hidden">
+                <div id="progress-bar" class="h-full bg-[#D4E09B] glitch-bar" style="width: 0%;"></div>
+            </div>
+            <div class="mt-4 flex flex-col items-center">
+                <p id="loading-text" class="text-white/90 font-outfit font-bold tracking-[0.2em] text-xs uppercase">Đang kết nối vệ tinh</p>
+                <p id="loading-percent" class="text-white/70 font-mono text-sm mt-1">0%</p>
+            </div>
         </div>
-        <p id="hint-text" style="font-weight:bold; color:#4a6741; margin-top: 20px;">Click 5 lần để mở quà! (0/5)</p>
     </div>
 
-    <div id="dashboard">
-        <div class="card">
-            <h1 style="font-size: 2.5rem;">Gửi Nhỏ Bạn Thân! ✨</h1>
-            <div id="typing-text" style="font-size: 1.2rem; min-height: 30px; font-weight: 600;"></div>
+    <!-- PHẦN 2: HEADER & MENU -->
+    <header id="main-header" class="fixed top-0 w-full z-50 transition-all duration-300 bg-transparent">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <!-- Logo Môi Trường (Bấm vào để về Trang Chủ) -->
+            <a href="#" onclick="switchPage('page-home'); return false;" class="flex items-center space-x-3 group z-50 relative">
+                <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-clover"></i>
+                </div>
+                <span class="font-outfit font-black text-2xl tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors" id="logo-text">ECO GREEN</span>
+            </a>
 
-            <div class="special-note" id="special-note">
-                <div style="color: #e67e22; font-weight: 700; font-size: 1.2rem; margin-bottom: 8px;">📌 Đôi lời nhắn nhủ:</div>
-                <div style="font-style: normal; color: #5d4037; font-size: 1.1rem; line-height: 1.5;">
-                    Hehe,lại là báo con của cậu đâyy🙈🙈
-               Tui hong mong gì hơn,miễn là bạn tui được bình an,được vui vẻ,và được làm chính mình là được rồi áa✨✨Mong cho tình bạn của chúng ta được mãi trường tồn và lâu dàii...^ ^
+            <!-- Nút Hamburger Menu Hiện Đại -->
+            <button id="menu-btn" class="relative z-50 w-12 h-12 flex flex-col justify-center items-center group focus:outline-none bg-white rounded-full shadow-md hover:shadow-lg transition-all border border-slate-100">
+                <div class="w-5 h-[2px] bg-slate-800 rounded-full hamburger-line line-1 mb-[5px] group-hover:bg-emerald-500"></div>
+                <div class="w-5 h-[2px] bg-slate-800 rounded-full hamburger-line line-2 mb-[5px] group-hover:bg-emerald-500"></div>
+                <div class="w-5 h-[2px] bg-slate-800 rounded-full hamburger-line line-3 group-hover:bg-emerald-500"></div>
+            </button>
+        </div>
+    </header>
+
+    <!-- Dropdown Menu Danh Sách Nhỏ Gọn -->
+    <div id="dropdown-menu" class="fixed top-24 right-6 bg-white rounded-2xl shadow-xl border border-slate-100 p-3 min-w-[220px] transform origin-top-right transition-all duration-300 scale-95 opacity-0 pointer-events-none z-40">
+        <nav class="flex flex-col space-y-1 text-left">
+            <a href="#" onclick="switchPage('page-home'); return false;" class="menu-link px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 font-semibold hover:text-emerald-600 transition flex items-center gap-3">
+                <i class="fa-solid fa-house text-emerald-500 w-5 text-center"></i> Trang Chủ
+            </a>
+            <a href="#" onclick="switchPage('page-images'); return false;" class="menu-link px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 font-semibold hover:text-emerald-600 transition flex items-center gap-3">
+                <i class="fa-solid fa-images text-emerald-500 w-5 text-center"></i> Kho Hình Ảnh
+            </a>
+            <a href="#" onclick="switchPage('page-videos'); return false;" class="menu-link px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 font-semibold hover:text-emerald-600 transition flex items-center gap-3">
+                <i class="fa-solid fa-circle-play text-emerald-500 w-5 text-center"></i> Thư Viện Video
+            </a>
+            <a href="#" onclick="switchPage('page-articles'); return false;" class="menu-link px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 font-semibold hover:text-emerald-600 transition flex items-center gap-3">
+                <i class="fa-solid fa-newspaper text-emerald-500 w-5 text-center"></i> Bài Báo Môi Trường
+            </a>
+            <!-- THÊM MENU LIÊN HỆ -->
+            <a href="#" onclick="switchPage('page-contact'); return false;" class="menu-link px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 font-semibold hover:text-emerald-600 transition flex items-center gap-3">
+                <i class="fa-solid fa-envelope text-emerald-500 w-5 text-center"></i> Liên Hệ
+            </a>
+        </nav>
+    </div>
+
+    <!-- PHẦN 3: NỘI DUNG CHÍNH (SPA CONATINER) -->
+    <main id="main-content" class="hidden opacity-0 transition-opacity duration-1000 pt-20">
+
+        <!-- ================= TRANG 1: TRANG CHỦ (THIẾT KẾ MỚI) ================= -->
+        <section id="page-home" class="page-section active min-h-[90vh] relative pb-24 pt-12 md:pt-20">
+            <!-- Nền trang trí -->
+            <div class="absolute top-0 right-0 w-3/4 md:w-1/2 h-[120%] bg-gradient-to-bl from-emerald-100/60 to-transparent -z-10 rounded-bl-[150px]"></div>
+
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <!-- Khu vực Hero (Giới thiệu chính) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
+                    <!-- Nội dung chữ (Bên trái) -->
+                    <div class="lg:col-span-7 text-left reveal">
+                        <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-emerald-100 shadow-md text-emerald-600 font-bold rounded-full text-sm mb-6">
+                            <i class="fa-solid fa-earth-americas animate-pulse"></i> Sứ mệnh bảo vệ Trái Đất
+                        </div>
+                        
+                        <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 leading-[1.1] tracking-tight">
+                            <span id="slogan-part1">Bảo Vệ</span> <br>
+                            <span id="slogan-part2" class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">Tương Lai Xanh.</span>
+                        </h1>
+                        
+                        <p class="text-lg text-slate-600 mb-10 leading-relaxed max-w-xl">
+                            Mỗi hành động nhỏ của bạn hôm nay đều góp phần gìn giữ sự sống cho muôn loài ngày mai. Trái Đất đang gọi, hãy cùng chúng tôi lắng nghe và hành động trước khi quá muộn.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="switchPage('page-images')" class="group relative px-8 py-4 bg-emerald-500 text-white rounded-full font-bold text-lg overflow-hidden shadow-lg shadow-emerald-500/40 transition-transform hover:-translate-y-1">
+                                <span class="relative z-10 flex items-center gap-2">Hành Động Ngay <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i></span>
+                                <div class="absolute inset-0 bg-emerald-600 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
+                            </button>
+                            <button onclick="switchPage('page-videos')" class="px-8 py-4 bg-white text-slate-700 border-2 border-slate-100 rounded-full font-bold hover:border-emerald-200 hover:text-emerald-600 transition shadow-sm flex items-center gap-2">
+                                <i class="fa-solid fa-play text-emerald-500"></i> Xem Video
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Khu vực Hình ảnh xếp chồng (Bên phải) -->
+                    <div class="lg:col-span-5 relative reveal delay-200 h-[350px] md:h-[500px] w-full mt-10 lg:mt-0">
+                        <!-- Ảnh Lớn (Nền) -->
+                        <div class="absolute top-0 right-0 w-4/5 h-4/5 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white z-10 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                            <img src="https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=800" class="w-full h-full object-cover" alt="Rừng nhiệt đới">
+                        </div>
+                        
+                        <!-- Ảnh Nhỏ (Đè lên góc dưới trái) -->
+                        <div class="absolute bottom-0 left-0 w-3/5 h-3/5 rounded-[2rem] overflow-hidden shadow-xl border-4 border-white z-20 transform -rotate-6 hover:scale-105 transition-transform duration-500">
+                            <img src="https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=600" class="w-full h-full object-cover" alt="Động vật hoang dã">
+                        </div>
+                        
+                        <!-- Huy hiệu động nổi lơ lửng -->
+                        <div class="absolute top-1/4 -left-4 md:-left-8 z-30 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/50" style="animation: breathe 4s ease-in-out infinite;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-globe"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Mục tiêu</p>
+                                    <p class="font-black text-slate-900">Net Zero 2050</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 Thẻ Thông Tin (Pillars) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal delay-300">
+                    <!-- Thẻ 1 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-2 transition-transform duration-300 border border-slate-50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-6 transform -rotate-6 group-hover:rotate-0 transition-transform">
+                            <i class="fa-solid fa-tree"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 font-outfit">Bảo Vệ Rừng Xanh</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Ngăn chặn nạn chặt phá rừng, trồng thêm cây xanh để duy trì lá phổi khổng lồ của Trái Đất.</p>
+                    </div>
+                    
+                    <!-- Thẻ 2 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-2 transition-transform duration-300 border border-slate-50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-6 transform rotate-3 group-hover:rotate-0 transition-transform">
+                            <i class="fa-solid fa-water"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 font-outfit">Làm Sạch Đại Dương</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Giảm thiểu rác thải nhựa, bảo tồn hệ sinh thái biển và các rạn san hô đang dần biến mất.</p>
+                    </div>
+
+                    <!-- Thẻ 3 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-2 transition-transform duration-300 border border-slate-50 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mb-6 transform -rotate-3 group-hover:rotate-0 transition-transform">
+                            <i class="fa-solid fa-recycle"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 font-outfit">Tái Chế & Giảm Thiểu</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Thay đổi thói quen tiêu dùng hàng ngày, tái chế vật liệu để giảm gánh nặng cho môi trường.</p>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC TRÍCH DẪN (QUOTES) ĐA DẠNG -->
+                <div class="mt-24 reveal delay-400 mb-12">
+                    <div class="bg-emerald-900 rounded-[2rem] p-8 md:p-12 text-center text-white relative overflow-hidden shadow-2xl">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
+                        <i class="fa-solid fa-quote-left text-4xl md:text-5xl text-emerald-500/50 mb-6"></i>
+                        
+                        <!-- Băng chuyền trích dẫn -->
+                        <div class="swiper quoteSwiper w-full max-w-4xl mx-auto">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <h3 class="text-2xl md:text-3xl font-outfit font-light leading-relaxed mb-6">"Trái Đất cung cấp đủ để đáp ứng nhu cầu của mọi người, nhưng không đủ cho lòng tham của mọi người."</h3>
+                                    <p class="font-bold text-emerald-400 tracking-wider uppercase text-sm">- Mahatma Gandhi -</p>
+                                </div>
+                                <div class="swiper-slide">
+                                    <h3 class="text-2xl md:text-3xl font-outfit font-light leading-relaxed mb-6">"Chúng ta không thừa kế Trái Đất từ tổ tiên, chúng ta mượn nó từ con cháu mình."</h3>
+                                    <p class="font-bold text-emerald-400 tracking-wider uppercase text-sm">- Tục ngữ người bản địa -</p>
+                                </div>
+                                <div class="swiper-slide">
+                                    <h3 class="text-2xl md:text-3xl font-outfit font-light leading-relaxed mb-6">"Thiên nhiên không vội vã, thế nhưng mọi thứ đều hoàn thành một cách kỳ diệu."</h3>
+                                    <p class="font-bold text-emerald-400 tracking-wider uppercase text-sm">- Lão Tử -</p>
+                                </div>
+                            </div>
+                            <div class="swiper-pagination !bottom-0 !relative mt-6"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div id="spotify-player">
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3szRQRg5bAY8WXXLnLrfrK?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <!-- ================= TRANG 2: KHO HÌNH ẢNH ================= -->
+        <section id="page-images" class="page-section min-h-screen py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">Kho Hình Ảnh</h2>
+                    <p class="text-slate-500 text-lg">Hai bức tranh đối lập về Trái Đất của chúng ta.</p>
+                </div>
+
+                <!-- BĂNG CHUYỀN HÌNH ẢNH NỔI BẬT (CAROUSEL) -->
+                <div class="mb-20 reveal">
+                    <div class="swiper mySwiper w-full h-[400px] md:h-[550px] rounded-[2rem] shadow-2xl overflow-hidden">
+                        <div class="swiper-wrapper">
+                            <!-- Ảnh 1 -->
+                            <div class="swiper-slide relative">
+                                <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=1200" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-8 md:p-12">
+                                    <h3 class="text-white text-3xl md:text-4xl font-bold font-outfit mb-3">Hòa Mình Vào Thiên Nhiên</h3>
+                                    <p class="text-white/90 text-lg">Khám phá những mảng xanh tuyệt đẹp của hành tinh.</p>
+                                </div>
+                            </div>
+                            <!-- Ảnh 2 -->
+                            <div class="swiper-slide relative">
+                                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=1200" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-8 md:p-12">
+                                    <h3 class="text-white text-3xl md:text-4xl font-bold font-outfit mb-3">Sự Sống Bắt Đầu</h3>
+                                    <p class="text-white/90 text-lg">Nơi khởi nguồn của muôn loài và hệ sinh thái đa dạng.</p>
+                                </div>
+                            </div>
+                            <!-- Ảnh 3 -->
+                            <div class="swiper-slide relative">
+                                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1200" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-8 md:p-12">
+                                    <h3 class="text-white text-3xl md:text-4xl font-bold font-outfit mb-3">Lá Phổi Của Trái Đất</h3>
+                                    <p class="text-white/90 text-lg">Rừng xanh là niềm hy vọng cho tương lai của chúng ta.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Nút điều hướng Swiper -->
+                        <div class="swiper-button-next !text-white after:!text-2xl"></div>
+                        <div class="swiper-button-prev !text-white after:!text-2xl"></div>
+                        <div class="swiper-pagination !bottom-6"></div>
+                    </div>
+                </div>
+
+                <!-- KHO 1: Vẻ đẹp thiên nhiên -->
+                <div class="mb-20">
+                    <div class="flex items-center gap-4 mb-8 reveal">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-mountain-sun"></i>
+                        </div>
+                        <h3 class="text-3xl font-outfit font-bold text-slate-800">Vẻ Đẹp Thiên Nhiên</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+                        <div class="group relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-md">
+                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                        </div>
+                        <div class="group relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-md">
+                            <img src="https://images.unsplash.com/photo-1498623116890-37e912163d5d?q=80&w=800" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                        </div>
+                        <div class="group relative rounded-2xl overflow-hidden h-64 md:h-80 shadow-md">
+                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHO 2: Tác động biến đổi khí hậu -->
+                <div>
+                    <div class="flex items-center gap-4 mb-8 reveal">
+                        <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <h3 class="text-3xl font-outfit font-bold text-slate-800">Tiếng Kêu Cứu Của Môi Trường</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+                        <div class="relative rounded-2xl overflow-hidden h-64 shadow-md bg-slate-900">
+                            <!-- Ảnh đất khô cằn -->
+                            <img src="https://www.thiennhien.net/wp-content/uploads/2018/06/180618_dat.jpg" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition">
+                            <div class="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded-lg text-white text-sm">Đất đai khô cằn</div>
+                        </div>
+                        <div class="relative rounded-2xl overflow-hidden h-64 shadow-md bg-slate-900">
+                            <!-- Ảnh rác thải nhựa đại dương -->
+                            <img src="https://sgplastic.com.vn/uploads/details/2023/08/images/tac-hai-o-nhiem-chat-thai-nhua-va-hanh-dong-chung-ta-1.jpg.webp" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition">
+                            <div class="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded-lg text-white text-sm">Ô nhiễm rác thải nhựa</div>
+                        </div>
+                        <div class="relative rounded-2xl overflow-hidden h-64 shadow-md bg-slate-900 lg:col-span-1 md:col-span-2">
+                            <!-- Ảnh chặt phá rừng -->
+                            <img src="https://thanhnien.mediacdn.vn/Uploaded/trandong/2016_04_01/pha-rung-1b_TQHJ.jpg?width=500" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition">
+                            <div class="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded-lg text-white text-sm">Nạn chặt phá rừng</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <form id="reply-form" action="https://formspree.io/f/xgolnvgl" method="POST">
-                <textarea name="message" placeholder="Choa tui biết suy nghĩ của cậu nhenn..." required></textarea>
-                <br>
-                <button type="submit" id="submit-btn">Gửi lời phản hồi của cậu tới tui 💌</button>
-            </form>
-        </div>
-    </div>
+        <!-- ================= TRANG 3: THƯ VIỆN VIDEO ================= -->
+        <section id="page-videos" class="page-section min-h-screen py-16 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-4">Thư Viện Video</h2>
+                    <p class="text-slate-400 text-lg">Đa dạng các thước phim tài liệu và phóng sự về môi trường sống.(lưu ý,khi video không hiện thị,bạn hãy nhấn vào xem trên youtube)</p>
+                </div>
+
+                <!-- VIDEO NỔI BẬT NHẤT (Chừa chỗ dán link) -->
+                <div class="mb-20 reveal">
+                    <h3 class="text-2xl font-outfit font-bold text-emerald-400 mb-6 border-l-4 border-emerald-400 pl-4">Phim Tài Liệu Nổi Bật</h3>
+                    <div class="bg-slate-800 p-2 md:p-4 rounded-[2rem] shadow-2xl">
+                        <div class="video-container rounded-2xl">
+                            <!-- HƯỚNG DẪN: Đổi link YouTube ở src="..." bên dưới -->
+                            <iframe 
+  width="560" 
+  height="315" 
+  src="https://www.youtube.com/embed/cV2gBU6hKfY?si=jXiTzN3QDaWIyU-e" title="Video Nổi Bật"
+  frameborder="0" 
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+  allowfullscreen>
+referrerpolicy="strict-origin-when-cross-origin"
+</iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DANH SÁCH VIDEO ĐA DẠNG (Lưới các video nhỏ, chừa chỗ dán link) -->
+                <div class="reveal">
+                    <h3 class="text-2xl font-outfit font-bold text-emerald-400 mb-6 border-l-4 border-emerald-400 pl-4">Khám Phá Thêm (Đa dạng chủ đề)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Ô Video 1: Chủ đề Biển -->
+                        <div class="bg-slate-800 rounded-2xl overflow-hidden hover:-translate-y-2 transition duration-300 flex flex-col">
+                            <div class="video-container">
+                                <!-- CHÈN LINK VIDEO BIỂN VÀO ĐÂY -->
+                                                               <iframe src="https://www.youtube.com/embed/4PwDFddpo4c?si=MOx07kR1D5NBBNJb" frameborder="0" allowfullscreen></iframe>
+
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col">
+                                <span class="text-xs font-bold text-blue-400 mb-2 uppercase">Đại Dương</span>
+                                <h4 class="font-bold text-lg mb-2">Bí ẩn đại dương sâu thẳm</h4>
+                                <p class="text-slate-400 text-sm mt-auto">Hệ sinh thái dưới biển đang vươn mình sinh tồn.</p>
+                            </div>
+                        </div>
+
+                        <!-- Ô Video 2: Chủ đề Rừng -->
+                        <div class="bg-slate-800 rounded-2xl overflow-hidden hover:-translate-y-2 transition duration-300 flex flex-col">
+                            <div class="video-container">
+                                <!-- CHÈN LINK VIDEO RỪNG VÀO ĐÂY -->
+                                <iframe src="https://www.youtube.com/embed/4PwDFddpo4c?si=MOx07kR1D5NBBNJb" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col">
+                                <span class="text-xs font-bold text-emerald-400 mb-2 uppercase">Rừng Già</span>
+                                <h4 class="font-bold text-lg mb-2">Hành động khẩn cấp vì rừng</h4>
+                                <p class="text-slate-400 text-sm mt-auto">Giải pháp bảo vệ lá phổi xanh.</p>
+                            </div>
+                        </div>
+
+                        <!-- Ô Video 3: Trống để điền -->
+                        <div class="bg-slate-800 rounded-2xl overflow-hidden hover:-translate-y-2 transition duration-300 flex flex-col">
+                            <div class="video-container">
+                                <!-- CHÈN LINK VIDEO RỪNG VÀO ĐÂY -->
+                                <iframe src="https://www.youtube.com/embed/_UuKhIxeKYQ?si=1rHSnQD6YoCJifWk" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col">
+                                <span class="text-xs font-bold text-emerald-400 mb-2 uppercase">Biển xanh</span>
+                                <h4 class="font-bold text-lg mb-2">Biển Xanh Sâu Thẳm Bí Ẩn</h4>
+                                <p class="text-slate-400 text-sm mt-auto">Biển xanh đang phải hứng chịu sự tàn phá nặng nề</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TRANG 4: BÀI BÁO MÔI TRƯỜNG ================= -->
+        <section id="page-articles" class="page-section min-h-screen py-16 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">Tin Tức & Bài Báo</h2>
+                    <p class="text-slate-500 text-lg">Cập nhật những thông tin đa chiều về tình hình biến đổi khí hậu.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal">
+                    
+                    <!-- Bài Báo 1 (Layout Dọc) -->
+                    <a href="https://tuoitre.vn/ngay-dai-ra-voi-toc-do-chua-tung-co-khi-bang-tan-o-2-cuc-20240717170828411.htm" target="_blank" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-2 transition duration-300 group flex flex-col">
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://xemthoitiet.com/wp-content/uploads/2024/07/bang-tan.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-md">Báo động</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide"><i class="fa-regular fa-clock"></i> 2 giờ trước</div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-emerald-600 transition">Băng tan ở 2 cực đang diễn ra với tốc độ nhanh kỷ lục</h3>
+                            <p class="text-slate-600 text-sm mb-4 line-clamp-3">Một nghiên cứu mới cho thấy tình trạng băng tan ở hai cực đang khiến Trái đất quay chậm hơn, làm tăng độ dài của ngày ở mức 'chưa từng có'...</p>
+                            <span class="text-emerald-500 font-semibold text-sm flex items-center gap-2 mt-auto">Đọc toàn bộ <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+
+                    <!-- Bài Báo 2 (Layout Dọc) -->
+                    <a href="https://www.tapchicongsan.org.vn/web/guest/bao-ve-moi-truong/-/2018/826009/rac-thai-nhua-o-viet-nam--thuc-trang-va-giai-phap.aspx" target="_blank" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-2 transition duration-300 group flex flex-col">
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=600" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-md">Phân tích</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide"><i class="fa-regular fa-clock"></i> 1 ngày trước</div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-emerald-600 transition">Rác Thải Nhựa Việt Nam:Thực Trạng và giải pháp</h3>
+                            <p class="text-slate-600 text-sm mb-4 line-clamp-3">Sinh vật biển đang phải đối mặt với nguy cơ tuyệt chủng do ăn phải hoặc mắc kẹt trong rác thải nhựa do con người tạo ra.</p>
+                            <span class="text-emerald-500 font-semibold text-sm flex items-center gap-2 mt-auto">Đọc toàn bộ <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+
+                     <a href="https://www.tapchicongsan.org.vn/web/guest/bao-ve-moi-truong/-/2018/826009/rac-thai-nhua-o-viet-nam--thuc-trang-va-giai-phap.aspx" target="_blank" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-2 transition duration-300 group flex flex-col">
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://dantocmiennui-media.baotintuc.vn/images/3f23de0fbaca0aeb1f71421b7bed6ceec88fa76731ecb6b363f463782f8b4d02ab60aace32cf822d63acd355033cdfeecaf01e5bf364577873971d94f6c64c0a4141a637c455374d35406ec04a99aebae8e38405dd14c0ae2b7e320ad0406a26b0ca943cb806c9f88b40afdee038dda888908afb016b147a5b833391c48042ce/potal_loai_hoa_lon_nhat_the_gioi_dung_truoc_nguy_co_tuyet_chung_6990473.jpg.avif" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-md">Phân tích</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide"><i class="fa-regular fa-clock"></i> 1 ngày trước</div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-emerald-600 transition">Loài hoa lớn nhất có nguy cơ tuyệt chủng</h3>
+                            <p class="text-slate-600 text-sm mb-4 line-clamp-3">Nghiên cứu mới cho thấy hầu hết các loài hoa Rafflesia, còn gọi là hoa xác chết và là loài hoa lớn nhất thế giới, đang có nguy cơ tuyệt chủng.</p>
+                            <span class="text-emerald-500 font-semibold text-sm flex items-center gap-2 mt-auto">Đọc toàn bộ <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TRANG 5: LIÊN HỆ (CONTACT) ================= -->
+        <section id="page-contact" class="page-section min-h-screen py-16 bg-white relative overflow-hidden">
+            <!-- Nền trang trí -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-50 rounded-full blur-3xl -z-10 -translate-y-1/2 translate-x-1/3"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-teal-50 rounded-full blur-3xl -z-10 translate-y-1/2 -translate-x-1/3"></div>
+
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">Kết Nối Với Chúng Tôi</h2>
+                    <p class="text-slate-500 text-lg">Cùng nhau hành động vì một Trái Đất xanh. Hãy để lại thông tin của bạn.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start reveal">
+                    <!-- Thông tin liên hệ -->
+                    <div class="bg-slate-900 text-white p-10 rounded-[2rem] shadow-2xl">
+                        <h3 class="text-3xl font-outfit font-bold mb-8 text-emerald-400">Thông Tin Liên Hệ</h3>
+                        
+                        <!-- CHỪA CHỖ ĐỂ BẠN ĐIỀN THÔNG TIN THẬT -->
+                        <div class="space-y-8">
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center text-emerald-400 text-2xl shrink-0">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-1">Địa chỉ</p>
+                                    <p class="text-lg">36 Quảng Hòa,Nam Ba Đồn,Quảng Trị</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center text-emerald-400 text-2xl shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-1">Điện thoại</p>
+                                    <p class="text-lg">0342234231</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center text-emerald-400 text-2xl shrink-0">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <p class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-1">Email</p>
+                                    <p class="text-lg">Rainmy2000@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mạng xã hội -->
+                        <div class="mt-12 pt-8 border-t border-slate-700">
+                            <p class="text-slate-400 font-semibold mb-4 uppercase tracking-wider">Theo dõi tuii tại đâyyy</p>
+                            <div class="flex gap-4">
+                                <!-- Chèn link MXH thật vào href="#" -->
+                                <a href="#" class="w-12 h-12 bg-slate-800 hover:bg-emerald-500 rounded-full flex items-center justify-center transition-colors text-xl"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="#" class="w-12 h-12 bg-slate-800 hover:bg-emerald-500 rounded-full flex items-center justify-center transition-colors text-xl"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#" class="w-12 h-12 bg-slate-800 hover:bg-emerald-500 rounded-full flex items-center justify-center transition-colors text-xl"><i class="fa-brands fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form điền thông tin (Tích hợp Formspree) -->
+                    <div class="bg-white p-10 rounded-[2rem] shadow-xl border border-slate-100">
+                        <!-- HƯỚNG DẪN: Thay YOUR_FORMSPREE_ID bằng ID thật của bạn trên Formspree (ví dụ: xqazokwp) -->
+                        <form action="https://formspree.io/f/mojyvqky" method="POST" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Họ và tên</label>
+                                    <input type="text" name="name" placeholder="Nhập tên của bạn" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                                    <input type="email" name="email" placeholder="Địa chỉ email" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Chủ đề</label>
+                                <input type="text" name="subject" placeholder="Bạn muốn thảo luận về vấn đề gì?" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Nội dung tin nhắn</label>
+                                <textarea name="message" rows="5" placeholder="Nhập nội dung chi tiết..." required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-emerald-500 text-white rounded-xl font-bold text-lg hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 mt-4">
+                                Gửi Tin Nhắn <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FOOTER CHUNG CHO MỌI TRANG ================= -->
+        <footer class="py-10 bg-black text-center border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-xl">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <p class="text-slate-500 text-sm font-medium uppercase tracking-widest">
+                    VÌ MỘT TRÁI ĐẤT XANH &copy; 2026
+                </p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Thư viện Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-        const correctPassword = "0811"; // Đổi pass ở đây nha
+        /* --- HỆ THỐNG ĐIỀU HƯỚNG ĐA TRANG (SPA ROUTER) --- */
+        function switchPage(pageId) {
+            // Lấy tất cả các trang và ẩn đi
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Hiển thị trang được chọn
+            document.getElementById(pageId).classList.add('active');
+            
+            // Cuộn lên đầu trang
+            window.scrollTo(0, 0);
 
-        // Mưa cỏ
-        setInterval(() => {
-            const c = document.createElement('div');
-            c.className = 'clover-rain';
-            c.innerText = '🍀';
-            c.style.left = Math.random() * 100 + 'vw';
-            c.style.animationDuration = Math.random() * 2 + 3 + 's';
-            document.body.appendChild(c);
-            setTimeout(() => c.remove(), 5000);
-        }, 400);
+            // Đóng menu nếu đang mở
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            if (!dropdownMenu.classList.contains('opacity-0')) {
+                toggleMenu();
+            }
 
-        function unlock() {
-            const val = document.getElementById('passInput').value;
-            if(val === correctPassword) {
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('gift-area').style.display = 'block';
+            // Kích hoạt lại hiệu ứng Scroll Reveal cho trang mới
+            setTimeout(() => {
+                initScrollReveal();
+            }, 100);
+        }
+
+        /* --- LOGIC DROPDOWN MENU --- */
+        const menuBtn = document.getElementById('menu-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuBtn.classList.add('menu-open');
+                dropdownMenu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                dropdownMenu.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
             } else {
-                document.getElementById('error-msg').style.display = 'block';
+                menuBtn.classList.remove('menu-open');
+                dropdownMenu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                dropdownMenu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
             }
         }
+        menuBtn.addEventListener('click', toggleMenu);
 
-        let clicks = 0;
-        function handleBoxClick() {
-            const box = document.getElementById('gift-container');
-            const hint = document.getElementById('hint-text');
-            clicks++;
-            if (clicks < 5) {
-                box.style.animation = 'none';
-                box.offsetHeight;
-                box.style.animation = `box-shake ${0.5 / clicks}s infinite`;
-                hint.innerText = `Click 5 lần để mở quà! (${clicks}/5)`;
-            } else {
-                explodeClovers();
-                box.classList.add('open');
-                hint.style.display = 'none';
-                setTimeout(() => {
-                    document.getElementById('gift-area').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'block';
-                    startTyping();
-                }, 1500);
+        // Đóng menu khi click ra ngoài
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                toggleMenu();
             }
-        }
+        });
 
-        function explodeClovers() {
-            const rect = document.getElementById('gift-container').getBoundingClientRect();
-            for (let i = 0; i < 40; i++) {
-                const p = document.createElement('div');
-                p.className = 'clover-pop';
-                p.innerText = Math.random() > 0.5 ? '🍀' : '✨';
-                p.style.left = (rect.left + rect.width / 2) + 'px';
-                p.style.top = (rect.top + rect.height / 2) + 'px';
-                const angle = Math.random() * Math.PI * 2;
-                const dist = 100 + Math.random() * 200;
-                p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-                p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-                p.style.setProperty('--tr', Math.random() * 360 + 'deg');
-                document.body.appendChild(p);
-                setTimeout(() => p.remove(), 1000);
-            }
-        }
+        /* --- SCROLL REVEAL (HIỆU ỨNG CUỘN) --- */
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.page-section.active .reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
-        function startTyping() {
-            const text = "Món quà nhỏ dành choa bạn hìn đâyyy! 🍀✨";
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    document.getElementById("typing-text").innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, 60);
-                } else {
-                    document.getElementById("special-note").style.display = "block";
-                    // Hiện Spotify và Form sau đó
-                    setTimeout(() => {
-                        document.getElementById("spotify-player").style.display = "block";
-                        document.getElementById("reply-form").style.display = "block";
-                    }, 800);
+            reveals.forEach(reveal => {
+                // Reset lại state để animation chạy lại nếu cần
+                reveal.classList.remove('active');
+                observer.observe(reveal);
+                if (reveal.getBoundingClientRect().top < window.innerHeight) {
+                    reveal.classList.add('active');
                 }
-            }
-            type();
+            });
         }
 
-        // Form logic
-        const form = document.getElementById("reply-form");
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById("submit-btn");
-            btn.innerText = "Đang gửi...";
-            await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
-            alert("Tui nhận được rồi! Cảm ơn bà 🥰");
-            btn.innerText = "Gửi tới email của tui 💌";
-        };
+        /* --- LOGIC LOADING VÀ BẮT ĐẦU --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            /* --- RANDOM SLOGAN --- */
+            const slogans = [
+                { p1: "Bảo Vệ", p2: "Tương Lai Xanh." },
+                { p1: "Hành Động", p2: "Vì Trái Đất." },
+                { p1: "Giữ Gìn", p2: "Màu Xanh." },
+                { p1: "Ươm Mầm", p2: "Sự Sống Mới." },
+                { p1: "Lắng Nghe", p2: "Mẹ Thiên Nhiên." }
+            ];
+            const randomSlogan = slogans[Math.floor(Math.random() * slogans.length)];
+            document.getElementById('slogan-part1').innerText = randomSlogan.p1;
+            document.getElementById('slogan-part2').innerText = randomSlogan.p2;
+
+            const progressBar = document.getElementById('progress-bar');
+            const loadingText = document.getElementById('loading-text');
+            const loadingPercent = document.getElementById('loading-percent');
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+            const bodyTag = document.getElementById('body-tag');
+            const header = document.getElementById('main-header');
+
+            // Hiệu ứng Header khi cuộn
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+
+            let progress = 0;
+            function laggyLoading() {
+                if (progress >= 100) return;
+                let jump = Math.floor(Math.random() * 25) + 1;
+                let delay = Math.random() * 550 + 50; 
+
+                if (Math.random() > 0.8) {
+                    delay += 1000;
+                    loadingText.innerText = "Tín hiệu yếu... Đang thử lại";
+                    loadingText.classList.add('text-red-300');
+                } else {
+                    loadingText.innerText = "Đang kết nối hệ thống xanh...";
+                    loadingText.classList.remove('text-red-300');
+                }
+
+                setTimeout(() => {
+                    progress += jump;
+                    if (progress > 100) progress = 100;
+                    progressBar.style.width = progress + "%";
+                    loadingPercent.innerText = progress + "%";
+
+                    if (progress === 100) {
+                        loadingText.innerText = "Kết nối thành công!";
+                        loadingText.classList.replace('text-red-300', 'text-emerald-300');
+                        setTimeout(() => finishLoading(), 800);
+                    } else {
+                        laggyLoading();
+                    }
+                }, delay);
+            }
+
+            function finishLoading() {
+                loadingScreen.style.opacity = '0';
+                bodyTag.classList.remove('no-scroll');
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    mainContent.classList.remove('hidden');
+                    setTimeout(() => {
+                        mainContent.classList.replace('opacity-0', 'opacity-100');
+                        initScrollReveal();
+                        
+                        // Khởi tạo băng chuyền hình ảnh (Swiper) tự động chạy
+                        new Swiper(".mySwiper", {
+                            loop: true,
+                            autoplay: { delay: 4000, disableOnInteraction: false },
+                            pagination: { el: ".swiper-pagination", clickable: true },
+                            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+                            observer: true, // Quan trọng: Giúp băng chuyền chạy đúng kích thước dù trang đang bị ẩn
+                            observeParents: true,
+                        });
+
+                        // Khởi tạo băng chuyền trích dẫn (Quote Swiper)
+                        new Swiper(".quoteSwiper", {
+                            loop: true,
+                            autoplay: { delay: 6000, disableOnInteraction: false },
+                            pagination: { el: ".swiper-pagination", clickable: true },
+                            effect: "fade", // Hiệu ứng mờ dần đẹp mắt
+                            fadeEffect: { crossFade: true }, // Khắc phục lỗi các dòng chữ bị đè lên nhau
+                            autoHeight: true, // Đảm bảo khung tự động co giãn vừa với độ dài câu nói
+                            observer: true,
+                            observeParents: true,
+                        });
+                    }, 50);
+                }, 700);
+            }
+
+            // Bắt đầu Loading
+            setTimeout(laggyLoading, 500);
+        });
     </script>
 </body>
 </html>
